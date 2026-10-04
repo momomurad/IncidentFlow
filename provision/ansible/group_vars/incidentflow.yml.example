@@ -1,0 +1,13 @@
+incidentflow_app_dir: /opt/incidentflow
+incidentflow_compose_project_name: incidentflow
+
+incidentflow_backend_image: momo1029/task-manager-api:latest
+incidentflow_user_ui_image: momo1029/incidentflow-user-ui:latest
+incidentflow_support_ui_image: momo1029/incidentflow-support-ui:latest
+incidentflow_admin_ui_image: momo1029/incidentflow-admin-ui:latest
+incidentflow_postgres_image: postgres:17-alpine
+
+# Replace these before deployment. Do not commit real secrets.
+incidentflow_postgres_password: replace-with-cloud-random-password
+incidentflow_admin_username: admin
+incidentflow_admin_password: replace-with-cloud-admin-password

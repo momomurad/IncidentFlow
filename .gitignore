@@ -1,0 +1,23 @@
+.vagrant/
+.env
+*.pem
+*.key
+id_rsa
+id_ed25519
+*.kubeconfig
+node_modules/
+dist/
+.scannerwork/
+
+# Terraform local working files and secrets
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+!**/*.tfvars.example
+**/tfplan
+**/*.tfplan
+
+# Ansible runtime inventory and secret variables
+provision/ansible/inventory/digitalocean-proof.ini
+provision/ansible/group_vars/incidentflow.yml

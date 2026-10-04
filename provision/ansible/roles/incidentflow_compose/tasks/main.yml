@@ -1,0 +1,59 @@
+- name: Create IncidentFlow application directory
+  ansible.builtin.file:
+    path: "{{ incidentflow_app_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+
+- name: Write IncidentFlow environment file
+  ansible.builtin.copy:
+    dest: "{{ incidentflow_app_dir }}/.env"
+    owner: root
+    group: root
+    mode: "0600"
+    content: |
+      POSTGRES_PASSWORD={{ incidentflow_postgres_password }}
+      ADMIN_USERNAME={{ incidentflow_admin_username }}
+      ADMIN_PASSWORD={{ incidentflow_admin_password }}
+  no_log: true
+
+- name: Write cloud Docker Compose file
+  ansible.builtin.template:
+    src: compose.cloud.yaml.j2
+    dest: "{{ incidentflow_app_dir }}/compose.yaml"
+    owner: root
+    group: root
+    mode: "0640"
+
+- name: Pull IncidentFlow images
+  ansible.builtin.command:
+    cmd: docker compose pull
+    chdir: "{{ incidentflow_app_dir }}"
+  changed_when: "'Downloaded newer image' in compose_pull.stdout or 'Pull complete' in compose_pull.stdout"
+  register: compose_pull
+
+- name: Start IncidentFlow stack
+  ansible.builtin.command:
+    cmd: docker compose up -d --wait
+    chdir: "{{ incidentflow_app_dir }}"
+  register: compose_up
+  changed_when: "'Started' in compose_up.stdout or 'Created' in compose_up.stdout or 'Recreated' in compose_up.stdout"
+
+- name: Verify user site readiness
+  ansible.builtin.uri:
+    url: http://127.0.0.1:8084/api/ready
+    return_content: true
+    status_code: 200
+
+- name: Verify support site readiness
+  ansible.builtin.uri:
+    url: http://127.0.0.1:8085/api/ready
+    return_content: true
+    status_code: 200
+
+- name: Verify admin site readiness
+  ansible.builtin.uri:
+    url: http://127.0.0.1:8086/api/ready
+    return_content: true
+    status_code: 200

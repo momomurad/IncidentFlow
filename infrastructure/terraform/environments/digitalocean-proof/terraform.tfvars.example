@@ -1,0 +1,12 @@
+project_name        = "incidentflow-proof"
+region              = "fra1"
+droplet_size        = "s-1vcpu-2gb"
+image               = "ubuntu-24-04-x64"
+ssh_public_key_path = "~/.ssh/incidentflow_do.pub"
+
+# Replace this with your current public IP, for example "203.0.113.10/32".
+# Use 0.0.0.0/0 only for a short proof window if you cannot get a stable IP.
+ssh_allowed_cidr = "0.0.0.0/0"
+
+http_allowed_cidrs = ["0.0.0.0/0", "::/0"]
+tags               = ["incidentflow", "cloud-proof", "temporary"]
